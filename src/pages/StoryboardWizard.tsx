@@ -984,8 +984,7 @@ export default function StoryboardWizard() {
                   accept="audio/*"
                   onChange={handleVoiceUpload}
                   className="hidden"
-                  />
-                </div>
+                />
               </div>
 
               {/* Preview Script */}
