@@ -8,7 +8,11 @@ const FLASK_API_BASE = import.meta.env.VITE_FLASK_API_URL || 'http://localhost:4
  */
 export const checkFlaskAPI = async (): Promise<boolean> => {
   try {
-    const response = await fetch(`${FLASK_API_BASE}/health`);
+    const response = await fetch(`${FLASK_API_BASE}/health`, {
+      headers: {
+        'ngrok-skip-browser-warning': '1'
+      }
+    });
     const data = await response.json();
     return data.ok === true;
   } catch (error) {
@@ -55,6 +59,7 @@ export const mergeVideosWithAPI = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1'
       },
       body: JSON.stringify({
         urls: videoUrls
@@ -114,6 +119,7 @@ export const mergeVideoWithAudio = async (
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'ngrok-skip-browser-warning': '1'
       },
       body: JSON.stringify({
         video_url: videoUrl,

@@ -29,6 +29,9 @@ export async function uploadAudioToGCS(
     // Upload to Flask endpoint
     const response = await fetch(`${FLASK_API_BASE}/api/upload-audio`, {
       method: 'POST',
+      headers: {
+        'ngrok-skip-browser-warning': '1'
+      },
       body: formData
     });
 
@@ -102,6 +105,9 @@ export async function uploadImageToGCS(
     // Upload to Flask endpoint
     const response = await fetch(`${FLASK_API_BASE}/api/upload-audio`, {
       method: 'POST',
+      headers: {
+        'ngrok-skip-browser-warning': '1'
+      },
       body: formData
     });
 
