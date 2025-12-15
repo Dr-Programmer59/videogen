@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Sidebar } from '@/components/Sidebar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -85,6 +87,7 @@ const DEFAULT_ENVIRONMENT: EnvironmentFormValues = {
 };
 
 export default function AIInfluencerNew() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>('character');
   
   // Form data
@@ -638,9 +641,17 @@ Return your response in this exact JSON format:
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="border-b bg-card">
+    <div className="flex min-h-screen w-full">
+      <Sidebar currentPage="ai-influencer" onPageChange={(page) => {
+        if (page === 'ai-influencer') navigate('/ai-influencer');
+        else if (page === 'ai-storyboard') navigate('/storyboard');
+        else navigate('/');
+      }} />
+      
+      <main className="flex-1 overflow-y-auto">
+        <div className="min-h-screen bg-background">
+          {/* Header */}
+          <div className="border-b bg-card">
         <div className="container mx-auto px-4 py-6">
           <h1 className="text-3xl font-bold">AI Influencer Creator</h1>
           <p className="text-sm text-muted-foreground mt-1">
@@ -2082,6 +2093,8 @@ Return your response in this exact JSON format:
           </DialogFooter>
         </DialogContent>
       </Dialog>
+        </div>
+      </main>
     </div>
   );
 }

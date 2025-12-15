@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Sidebar } from '@/components/Sidebar';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -53,6 +54,7 @@ interface ProjectSettings {
 }
 
 export default function StoryboardWizard() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState<Step>('idea');
   const [isGenerating, setIsGenerating] = useState(false);
   const [scenes, setScenes] = useState<Scene[]>([]);
@@ -1689,7 +1691,11 @@ export default function StoryboardWizard() {
 
   return (
     <div className="flex min-h-screen w-full">
-      <Sidebar currentPage="ai-storyboard" onPageChange={() => {}} />
+      <Sidebar currentPage="ai-storyboard" onPageChange={(page) => {
+        if (page === 'ai-influencer') navigate('/ai-influencer');
+        else if (page === 'ai-storyboard') navigate('/storyboard');
+        else navigate('/');
+      }} />
       
       <main className="flex-1 overflow-y-auto p-8">
         <div className="max-w-6xl mx-auto">
