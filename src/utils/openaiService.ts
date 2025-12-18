@@ -192,12 +192,15 @@ Requirements:
       },
     });
 
-    console.log('Full OpenAI response:', response);
+    console.log('OpenAI response received');
 
     // Preferred shortcut: combined text from Responses API
     let enhancedPrompt = ((response as any).output_text as string | undefined) ?? '';
 
-    enhancedPrompt = enhancedPrompt.trim();
+    // Clean control characters that might break JSON parsing
+    enhancedPrompt = enhancedPrompt
+      .replace(/[\x00-\x1F\x7F]/g, ' ') // Remove control characters
+      .trim();
 
     console.log('=== Enhanced Prompt by OpenAI ===');
     console.log(enhancedPrompt);
@@ -212,9 +215,9 @@ Requirements:
     console.error('Error enhancing prompt with OpenAI:', error);
 
     if (error?.response) {
-      console.error('OpenAI error response:', error.response);
+      console.error('OpenAI error response:', JSON.stringify(error.response, null, 2));
     } else if (error?.error) {
-      console.error('OpenAI error payload:', error.error);
+      console.error('OpenAI error payload:', JSON.stringify(error.error, null, 2));
     }
 
     throw error;
