@@ -113,19 +113,23 @@ export const checkJobStatus = async (jobId: string): Promise<RunPodStatusRespons
 /**
  * Poll job status until completion or failure
  * Returns the generated image in base64 format
+ * No timeout - waits indefinitely until job completes or fails
  */
 export const pollJobUntilComplete = async (
   jobId: string,
   onProgress?: (status: string) => void,
-  maxAttempts: number = 60,
+  maxAttempts: number = Infinity,
   intervalMs: number = 2000
 ): Promise<string> => {
-  console.log('⏳ Polling job status...');
+  console.log('⏳ Polling job status (no timeout)...');
   
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+  let attempt = 0;
+  
+  while (true) {
+    attempt++;
     const status = await checkJobStatus(jobId);
     
-    console.log(`Poll attempt ${attempt + 1}/${maxAttempts} - Status: ${status.status}`);
+    console.log(`Poll attempt ${attempt}${maxAttempts !== Infinity ? `/${maxAttempts}` : ''} - Status: ${status.status}`);
     console.log('📦 Poll Response:', JSON.stringify(status, null, 2));
     
     if (onProgress) {
@@ -146,11 +150,14 @@ export const pollJobUntilComplete = async (
       throw new Error(`Job failed: ${status.error || 'Unknown error'}`);
     }
 
+    // Check if we've reached max attempts (only if not Infinity)
+    if (maxAttempts !== Infinity && attempt >= maxAttempts) {
+      throw new Error('Job timeout: Maximum polling attempts reached');
+    }
+
     // Wait before next poll
     await new Promise(resolve => setTimeout(resolve, intervalMs));
   }
-
-  throw new Error('Job timeout: Maximum polling attempts reached');
 };
 
 /**
